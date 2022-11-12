@@ -13,3 +13,11 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Task {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  time            DateTime
+  durationMinutes Int
+}
