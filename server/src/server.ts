@@ -1,6 +1,6 @@
 import cors from '@fastify/cors'
 import { PrismaClient } from '@prisma/client'
-import Fastify, { FastifyRequest } from 'fastify'
+import Fastify from 'fastify'
 import { z } from 'zod'
 
 const prisma = new PrismaClient({
@@ -10,12 +10,6 @@ const prisma = new PrismaClient({
 const fastify = Fastify({
     logger: true,
 })
-
-type MyRequest = FastifyRequest<{
-    Params: {
-        id: string
-    }
-}>
 
 const start = async () => {
     await fastify.register(cors, {
@@ -32,7 +26,7 @@ const start = async () => {
 
         const { title, description, time, durationMinutes } = taskBody.parse(request.body)
 
-        await prisma.task.create({
+        const createdTask = await prisma.task.create({
             data: {
                 title,
                 description,
@@ -41,7 +35,7 @@ const start = async () => {
             }
         })
 
-        return reply.status(201)
+        return reply.status(201).send(createdTask)
     })
 
     fastify.get('/tasks', async () => {
@@ -50,16 +44,44 @@ const start = async () => {
         return tasks
     })
 
-    fastify.delete('/tasks/:id', async (request: MyRequest, reply) => {
-        const id = z.string().parse(request.params.id)
+    fastify.put('/tasks/:id', async (request, reply) => {
+        const { id } = z.object({
+            id: z.string()
+        }).parse(request.params)
 
-        await prisma.task.delete({
+        const taskBody = z.object({
+            title: z.string(),
+            description: z.string(),
+            time: z.string().transform((t) => new Date(t)),
+            durationMinutes: z.number()
+        })
+
+        const { title, description, time, durationMinutes } = taskBody.parse(request.body)
+
+        const updatedTask = await prisma.task.update({
+            where: {
+                id
+            },
+            data: {
+                title, description, time, durationMinutes
+            }
+        })
+
+        return reply.status(200).send(updatedTask)
+    })
+
+    fastify.delete('/tasks/:id', async (request, reply) => {
+        const { id } = z.object({
+            id: z.string()
+        }).parse(request.params)
+
+        const deletedTask = await prisma.task.delete({
             where: {
                 id
             }
         })
 
-        return reply.status(200)
+        return reply.status(200).send(deletedTask)
     })
 
     try {
