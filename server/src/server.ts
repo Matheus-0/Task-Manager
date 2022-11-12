@@ -44,6 +44,22 @@ const start = async () => {
         return tasks
     })
 
+    fastify.get('/tasks/:query', async (request, reply) => {
+        const { query } = z.object({
+            query: z.string()
+        }).parse(request.params)
+
+        const tasks = await prisma.task.findMany({
+            where: {
+                title: {
+                    contains: query
+                }
+            }
+        })
+
+        return reply.status(200).send(tasks)
+    })
+
     fastify.put('/tasks/:id', async (request, reply) => {
         const { id } = z.object({
             id: z.string()
