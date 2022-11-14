@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from 'react'
 
 import Modal from '../components/Modal'
 import TaskCard from '../components/TaskCard'
+import TaskForm from '../components/TaskForm'
 
 import { api } from '../services/api'
 
@@ -18,13 +19,18 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-  const [showEditModal, setShowEditModal] = useState(false)
   const [search, setSearch] = useState('')
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [tasks, setTasks] = useState<TaskType[]>([])
 
   useEffect(() => {
     setTasks(props.tasks)
   }, [])
+
+  const handleTaskCreate = async () => {
+    setShowCreateModal(true)
+  }
 
   const handleTaskEdit = async (task: TaskType) => {
     setShowEditModal(true)
@@ -63,31 +69,19 @@ export default function Home(props: HomeProps) {
         show={showEditModal}
         title={"Edição de tarefa"}
       >
-        <form onSubmit={() => {}}>
-          <div className="mb-2">
-            <label htmlFor="input-title" className="block mb-2 text-sm font-medium text-gray-900">Título</label>
+        <TaskForm
+          onSubmit={() => {}}
+        />
+      </Modal>
 
-            <input type="text" id="input-title" className="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Digite o título..." />
-          </div>
-
-          <div className="mb-2">
-            <label htmlFor="input-description" className="block mb-2 text-sm font-medium text-gray-900">Descrição</label>
-
-            <textarea id="input-description" rows={4} className="block resize-none p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Digite a descrição da tarefa..."></textarea>
-          </div>
-
-          <div className="mb-2">
-            <label htmlFor="input-date" className="block mb-2 text-sm font-medium text-gray-900">Data</label>
-
-            <input id="input-date" type="date" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Selecionar data" />
-          </div>
-
-          <div className="mb-2">
-            <label htmlFor="input-duration" className="block mb-2 text-sm font-medium text-gray-900">Duração (minutos)</label>
-
-            <input type="text" id="input-duration" className="block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 text-sm focus:ring-blue-500 focus:border-blue-500" placeholder="Digite a duração da tarefa em minutos..." />
-          </div>
-        </form>
+      <Modal
+        onClose={() => setShowCreateModal(false)}
+        show={showCreateModal}
+        title={"Criação de tarefa"}
+      >
+        <TaskForm
+          onSubmit={() => {}}
+        />
       </Modal>
       
       <div className="">
@@ -130,6 +124,16 @@ export default function Home(props: HomeProps) {
                 Buscar
             </button>
         </form>
+
+        <div className="flex justify-end pr-20 py-4">
+          <button
+            type="button"
+            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
+            onClick={handleTaskCreate}
+          >
+            Cadastrar nova tarefa
+          </button>
+        </div>
 
         <div className="grid grid-cols-4 gap-x-24 gap-y-12 items-center pb-12 pt-6 px-20">
           {tasks.map((task: TaskType) => (
