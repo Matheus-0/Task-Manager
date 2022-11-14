@@ -28,8 +28,23 @@ export default function Home(props: HomeProps) {
     setTasks(props.tasks)
   }, [])
 
-  const handleTaskCreate = async () => {
-    setShowCreateModal(true)
+  const handleTaskCreate = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post('/tasks', {
+        "title": e.target.title.value,
+        "description": e.target.description.value,
+        "time": e.target.date.value,
+        "durationMinutes": parseInt(e.target.duration.value)
+      })
+
+      alert(`Tarefa "${e.target.title.value}" cadastrada com sucesso!`)
+
+      window.location.reload()
+    } catch (error) {
+      alert('Falha ao cadastrar tarefa, tente novamente!')
+    }
   }
 
   const handleTaskEdit = async (task: TaskType) => {
@@ -80,7 +95,7 @@ export default function Home(props: HomeProps) {
         title={"Criação de tarefa"}
       >
         <TaskForm
-          onSubmit={() => {}}
+          onSubmit={handleTaskCreate}
         />
       </Modal>
       
@@ -129,7 +144,7 @@ export default function Home(props: HomeProps) {
           <button
             type="button"
             className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
-            onClick={handleTaskCreate}
+            onClick={() => setShowCreateModal(true)}
           >
             Cadastrar nova tarefa
           </button>
