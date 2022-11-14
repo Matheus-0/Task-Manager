@@ -1,7 +1,7 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react'
 
-import Modal from '../components/Modal';
-import TaskCard from '../components/TaskCard';
+import Modal from '../components/Modal'
+import TaskCard from '../components/TaskCard'
 
 import { api } from '../services/api'
 
@@ -9,7 +9,7 @@ interface TaskType {
   id: string,
   title: string,
   description: string,
-  time: Date,
+  time: string,
   durationMinutes: number
 }
 
@@ -18,7 +18,7 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false)
   const [search, setSearch] = useState('')
   const [tasks, setTasks] = useState<TaskType[]>([])
 
@@ -27,7 +27,7 @@ export default function Home(props: HomeProps) {
   }, [])
 
   const handleTaskEdit = async (task: TaskType) => {
-    setShowEditModal(true);
+    setShowEditModal(true)
   }
 
   const handleTaskRemove = async (task: TaskType) => {
@@ -114,6 +114,7 @@ export default function Home(props: HomeProps) {
               onRemoveClick={() => handleTaskRemove(task)}
               taskDescription={task.description}
               taskDurationMinutes={task.durationMinutes}
+              taskTime={new Date(task.time)}
               taskTitle={task.title}
             />
           ))}
