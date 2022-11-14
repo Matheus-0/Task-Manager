@@ -1,5 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 
+import TaskCard from '../components/TaskCard';
+
 import { api } from '../services/api'
 
 interface TaskType {
@@ -82,7 +84,7 @@ export default function Home(props: HomeProps) {
                 />
             </div>
 
-            <button type="submit" className="flex p-2.5 ml-2 text-sm font-medium text-white bg-blue-500 rounded-lg border border-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">
+            <button type="submit" className="flex px-4 py-2.5 ml-2 text-sm font-medium text-white bg-blue-500 rounded-lg border border-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
@@ -93,30 +95,12 @@ export default function Home(props: HomeProps) {
 
         <div className="grid grid-cols-4 gap-x-24 gap-y-12 items-center pb-12 pt-6 px-20">
           {tasks.map((task: TaskType) => (
-            <div className="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md">
-              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{task.title}</h5>
-
-              <p className="mb-3 font-normal text-gray-700">{task.description}</p>
-
-              <p className="mb-6 font-normal text-gray-700">Duração: {task.durationMinutes} minutos</p>
-
-              <div className="flex justify-between text-sm">
-                <button
-                  type="button"
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
-                >
-                  Editar
-                </button>
-              
-                <button
-                  type="button"
-                  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
-                  onClick={() => handleTaskRemove(task)}
-                >
-                  Remover
-                </button>
-              </div>
-            </div>
+            <TaskCard
+              onRemoveClick={() => handleTaskRemove(task)}
+              taskDescription={task.description}
+              taskDurationMinutes={task.durationMinutes}
+              taskTitle={task.title}
+            />
           ))}
         </div>
       </div>
