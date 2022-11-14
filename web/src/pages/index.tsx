@@ -3,6 +3,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { api } from '../services/api'
 
 interface TaskType {
+  id: string,
   title: string,
   description: string,
   time: Date,
@@ -20,6 +21,20 @@ export default function Home(props: HomeProps) {
   useEffect(() => {
     setTasks(props.tasks)
   }, [])
+
+  const handleTaskRemove = async (task: TaskType) => {
+    if (confirm(`Tem certeza que deseja apagar a tarefa "${task.title}"?`)) {
+      try {
+        const response = await api.delete(`/tasks/${task.id}`)
+
+        alert(`Tarefa "${task.title}" removida com sucesso!`)
+
+        window.location.reload()
+      } catch (error) {
+        alert('Falha ao remover tarefa, tente novamente!')
+      }
+    }
+  }
 
   const handleTaskSearchSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -77,7 +92,7 @@ export default function Home(props: HomeProps) {
             </button>
         </form>
 
-        <div className="grid grid-cols-4 gap-28 items-center py-6 px-20">
+        <div className="grid grid-cols-4 gap-x-24 gap-y-12 items-center pb-12 pt-6 px-20">
           {tasks.map((task: TaskType) => (
             <div className="p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md">
               <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{task.title}</h5>
@@ -87,9 +102,20 @@ export default function Home(props: HomeProps) {
               <p className="mb-6 font-normal text-gray-700">Duração: {task.durationMinutes} minutos</p>
 
               <div className="flex justify-between text-sm">
-                <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">Editar</button>
+                <button
+                  type="button"
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
+                >
+                  Editar
+                </button>
               
-                <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Remover</button>
+                <button
+                  type="button"
+                  className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
+                  onClick={() => handleTaskRemove(task)}
+                >
+                  Remover
+                </button>
               </div>
             </div>
           ))}
