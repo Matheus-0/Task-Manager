@@ -10,7 +10,6 @@ export default function Home() {
           <h1 className="font-medium text-lg text-gray-800">Lista de Tarefas</h1>
         </div>
 
-        
         <form className="flex items-center px-20 py-6">   
             <label htmlFor="simple-search" className="sr-only">Buscar</label>
 
