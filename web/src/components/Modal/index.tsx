@@ -23,7 +23,7 @@ const Modal = ({ children, onClose, show, title }: ModalProps) => {
 
   const modalContent = show ? (
     <div className="bg-half-transparent absolute top-0 left-0 w-full h-full flex justify-center items-center">
-      <div className="bg-white w-96 h-96 rounded-2xl">
+      <div className="bg-white w-96 rounded-2xl">
         <div className="flex items-center justify-between pl-4 pr-2.5 py-2.5 border-b">
           <h3 className="text-xl font-semibold text-gray-900">
             {title}
@@ -39,7 +39,7 @@ const Modal = ({ children, onClose, show, title }: ModalProps) => {
             </svg>
           </button>
         </div>
-        <div className="pt-4 px-4">{children}</div>
+        <div className="px-4 py-2">{children}</div>
       </div>
     </div>
   ) : null
