@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 
+import Modal from '../components/Modal';
 import TaskCard from '../components/TaskCard';
 
 import { api } from '../services/api'
@@ -17,12 +18,17 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
-  const [tasks, setTasks] = useState<TaskType[]>([])
+  const [showEditModal, setShowEditModal] = useState(false);
   const [search, setSearch] = useState('')
+  const [tasks, setTasks] = useState<TaskType[]>([])
 
   useEffect(() => {
     setTasks(props.tasks)
   }, [])
+
+  const handleTaskEdit = async (task: TaskType) => {
+    setShowEditModal(true);
+  }
 
   const handleTaskRemove = async (task: TaskType) => {
     if (confirm(`Tem certeza que deseja apagar a tarefa "${task.title}"?`)) {
@@ -52,6 +58,14 @@ export default function Home(props: HomeProps) {
 
   return (
     <>
+      <Modal
+        onClose={() => setShowEditModal(false)}
+        show={showEditModal}
+        title={"Edição de tarefa"}
+      >
+        Modal para o formulário de edição.
+      </Modal>
+      
       <div className="">
         <div className="bg-white flex justify-center border px-6 py-6">
           <h1 className="font-semibold text-2xl text-gray-700">Diel Task Manager</h1>
@@ -96,6 +110,7 @@ export default function Home(props: HomeProps) {
         <div className="grid grid-cols-4 gap-x-24 gap-y-12 items-center pb-12 pt-6 px-20">
           {tasks.map((task: TaskType) => (
             <TaskCard
+              onEditClick={() => handleTaskEdit(task)}
               onRemoveClick={() => handleTaskRemove(task)}
               taskDescription={task.description}
               taskDurationMinutes={task.durationMinutes}

@@ -12,6 +12,8 @@ export default function Document() {
       <body className="bg-gray-200">
         <Main/>
         <NextScript/>
+
+        <div id="modal-root"></div>
       </body>
     </Html>
   )
