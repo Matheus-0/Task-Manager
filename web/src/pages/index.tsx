@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 
 import Modal from '../components/Modal'
 import TaskCard from '../components/TaskCard'
@@ -19,6 +19,8 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
+  const toBeEditedTask = useRef({});
+
   const [search, setSearch] = useState('')
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
@@ -29,7 +31,7 @@ export default function Home(props: HomeProps) {
   }, [])
 
   const handleTaskCreate = async (e: FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       const response = await api.post('/tasks', {
@@ -47,8 +49,43 @@ export default function Home(props: HomeProps) {
     }
   }
 
-  const handleTaskEdit = async (task: TaskType) => {
+  const handleTaskCreateClose = () => {
+    setShowCreateModal(false)
+  }
+
+  const handleTaskCreateOpen = () => {
+    setShowCreateModal(true)
+  }
+
+  const handleTaskEdit = async (e: FormEvent) => {
+    e.preventDefault()
+
+    try {
+      const response = await api.put(`/tasks/${toBeEditedTask.current.id}`, {
+        "title": e.target.title.value,
+        "description": e.target.description.value,
+        "time": e.target.date.value,
+        "durationMinutes": parseInt(e.target.duration.value)
+      })
+
+      alert(`Tarefa "${e.target.title.value}" editada com sucesso!`)
+
+      window.location.reload()
+    } catch (error) {
+      alert('Falha ao editar tarefa, tente novamente!')
+    }
+  }
+
+  const handleTaskEditClose = () => {
+    setShowEditModal(false)
+
+    toBeEditedTask.current = {}
+  }
+
+  const handleTaskEditOpen = (task: TaskType) => {
     setShowEditModal(true)
+
+    toBeEditedTask.current = task
   }
 
   const handleTaskRemove = async (task: TaskType) => {
@@ -80,17 +117,17 @@ export default function Home(props: HomeProps) {
   return (
     <>
       <Modal
-        onClose={() => setShowEditModal(false)}
+        onClose={handleTaskEditClose}
         show={showEditModal}
         title={"Edição de tarefa"}
       >
         <TaskForm
-          onSubmit={() => {}}
+          onSubmit={handleTaskEdit}
         />
       </Modal>
 
       <Modal
-        onClose={() => setShowCreateModal(false)}
+        onClose={handleTaskCreateClose}
         show={showCreateModal}
         title={"Criação de tarefa"}
       >
@@ -144,7 +181,7 @@ export default function Home(props: HomeProps) {
           <button
             type="button"
             className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
-            onClick={() => setShowCreateModal(true)}
+            onClick={handleTaskCreateOpen}
           >
             Cadastrar nova tarefa
           </button>
@@ -153,7 +190,7 @@ export default function Home(props: HomeProps) {
         <div className="grid grid-cols-4 gap-x-24 gap-y-12 items-center pb-12 pt-6 px-20">
           {tasks.map((task: TaskType) => (
             <TaskCard
-              onEditClick={() => handleTaskEdit(task)}
+              onEditClick={() => handleTaskEditOpen(task)}
               onRemoveClick={() => handleTaskRemove(task)}
               taskDescription={task.description}
               taskDurationMinutes={task.durationMinutes}
