@@ -140,10 +140,6 @@ export default function Home(props: HomeProps) {
         <div className="bg-white flex justify-center border px-6 py-6">
           <h1 className="font-semibold text-2xl text-gray-700">Diel Task Manager</h1>
         </div>
-        
-        <div className="bg-gray-100 flex justify-center py-4 shadow-sm">
-          <h1 className="font-medium text-lg text-gray-800">Lista de Tarefas</h1>
-        </div>
 
         <form
           className="flex items-center px-20 pb-6 pt-12"
