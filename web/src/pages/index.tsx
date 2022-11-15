@@ -206,6 +206,8 @@ export default function Home(props: HomeProps) {
 
 export const getServerSideProps = async () => {
   const tasksResponse = await api.get('/tasks')
+
+  tasksResponse.data.sort((a: TaskType, b: TaskType) => Date.parse(a.time) - Date.parse(b.time))
   
   return {
     props: {

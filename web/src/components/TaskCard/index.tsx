@@ -21,7 +21,7 @@ export default function TaskCard({ onEditClick, onRemoveClick, taskDescription, 
       <div className="flex justify-between text-sm">
         <button
           type="button"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
+          className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
           onClick={onEditClick}
         >
           Editar
@@ -29,7 +29,7 @@ export default function TaskCard({ onEditClick, onRemoveClick, taskDescription, 
       
         <button
           type="button"
-          className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="focus:outline-none text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
           onClick={onRemoveClick}
         >
           Remover
